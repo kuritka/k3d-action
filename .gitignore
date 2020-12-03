@@ -8,6 +8,7 @@
 !.gitignore
 !*.yaml
 !*.md
+!*.sh
 
 # ...even if they are in subdirectories
 !*/

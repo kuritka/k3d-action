@@ -17,7 +17,7 @@ runs:
   steps:
     - id: main
       shell: bash
-      run: make deploy-k3d
+      run: run.sh deploy
       env:
         K3D_NAME: ${{ inputs.k3d-name }}
         K3D_ARGS: ${{ inputs.k3d-args }}
