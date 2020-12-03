@@ -22,10 +22,8 @@ endif
 #		Targets
 ###############################
 
-all: run
-
-.PHONY: run
-run:
+.PHONY: deploy-k3d
+deploy-k3d:
 	@echo "\n$(YELLOW)Download k3d $(NC)see: $(K3D_URL) "
 	curl --silent --fail $(K3D_URL) | bash
 
