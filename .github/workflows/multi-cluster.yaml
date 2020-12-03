@@ -11,12 +11,12 @@ jobs:
       - uses: ./
         name: "test-cluster-1 on bridge network"
         with:
-          k3d-name: "test01"
+          k3d-name: "test-cluster-1"
           k3d-args: "-p \"80:80@agent[0]\" -p \"443:443@agent[0]\" -p \"5053:53/udp@agent[0]\"  --agents 3 --no-lb --k3s-server-arg \"--no-deploy=traefik,servicelb,metrics-server\" --network bridge"
       - uses: ./
         name: "test-cluster-2 on bridge network"
         with:
-          k3d-name: "test02"
+          k3d-name: "test-cluster-2"
           k3d-args: "-p \"81:80@agent[0]\" -p \"444:443@agent[0]\" -p \"5054:53/udp@agent[0]\"  --agents 3 --no-lb --k3s-server-arg \"--no-deploy=traefik,servicelb,metrics-server\" --network bridge"
       - run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
         name: cluster info
