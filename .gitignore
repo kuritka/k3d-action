@@ -4,7 +4,6 @@
 # But not these files...
 !CODEOWNERS
 !LICENSE
-!Makefile
 !.gitignore
 !*.yaml
 !*.md
