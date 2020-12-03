@@ -47,10 +47,8 @@ deploy(){
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
-    echo $k3dArgs
-
     echo -e "\n${YELLOW}Deploy cluster ${CYAN}$k3dName ${NC}"
-    k3d cluster create ${k3dName} --wait ${k3dArgs:-}
+    eval "k3d cluster create ${k3dName} --wait ${k3dArgs:-}"
 }
 
 clean(){
