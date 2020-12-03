@@ -2,11 +2,12 @@
 *
 
 # But not these files...
+!CODEOWNERS
+!LICENSE
+!Makefile
 !.gitignore
 !*.yaml
 !*.md
-!*.sh
-!Makefile
 
 # ...even if they are in subdirectories
 !*/
