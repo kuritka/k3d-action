@@ -31,3 +31,4 @@ run:
 
 	@echo "\n$(YELLOW)Deploy k3d $(CYAN)$(K3D_NAME) $(NC)"
 	k3d cluster create $(K3D_NAME) --wait $(K3D_ARGS)
+
