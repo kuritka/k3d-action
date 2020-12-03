@@ -1,0 +1,16 @@
+name: Inspect K3d action
+
+on:
+  [workflow_dispatch, push]
+jobs:
+  k3d-inspect:
+    name: Inspect K3d
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          k3d-name: "test01"
+          k3d-args: "-p \"80:80@agent[0]\" -p \"443:443@agent[0]\" -p \"5053:53/udp@agent[0]\"  --agents 3 --no-lb --k3s-server-arg \"--no-deploy=traefik,servicelb,metrics-server\" --network bridge"
+        id: install
+
