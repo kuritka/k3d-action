@@ -1,0 +1,22 @@
+name: Setup K3d
+description: Setup K3d action.
+author: kuritka
+branding:
+  icon: cloud
+  color: blue
+inputs:
+  k3d-name:
+    description: "Cluster name."
+    required: true
+  k3d-args:
+    description: "Additional arguments to k3d cluster. see: https://k3d.io/usage/commands/"
+    required: false
+runs:
+  using: composite
+  steps:
+    - id: main
+      shell: bash
+      run: make
+      env:
+        K3D_NAME: ${{ inputs.k3d-name }}
+        K3D_ARGS: ${{ inputs.k3d-args }}

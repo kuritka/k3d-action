@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!*.yaml
+!*.md
+!*.sh
+!Makefile
+
+# ...even if they are in subdirectories
+!*/
