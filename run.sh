@@ -57,7 +57,7 @@ clean(){
     fi
     local k3dName="${K3D_NAME}"
     echo -e "\n${YELLOW}Destroy cluster ${CYAN}$k3dName ${NC}"
-    k3d cluster delete "$k3dName"
+    eval "k3d cluster delete ${k3dName}"
 }
 
 if [[ "$#" -lt 1 ]]; then

@@ -18,6 +18,7 @@ jobs:
         with:
           k3d-name: "test02"
           k3d-args: "-p \"81:80@agent[0]\" -p \"444:443@agent[0]\" -p \"5054:53/udp@agent[0]\"  --agents 3 --no-lb --k3s-server-arg \"--no-deploy=traefik,servicelb,metrics-server\" --network bridge"
-      - run: kubectl cluster-info
+      - run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
+        name: cluster info
       - run: docker ps -a
       - run: docker network inspect bridge
