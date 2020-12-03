@@ -1,4 +1,4 @@
-name: Inspect K3d action
+name: Advanced args test
 
 on:
   [workflow_dispatch, push]
