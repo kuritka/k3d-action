@@ -26,8 +26,8 @@ all: run
 
 .PHONY: run
 run:
-	@echo "\n$(YELLOW)Download k3d $(NC) see: $(K3D_URL) "
+	@echo "\n$(YELLOW)Download k3d $(NC)see: $(K3D_URL) "
 	curl --silent --fail $(K3D_URL) | bash
 
-	@echo "\n$(YELLOW)Deploy k3d $(CYAN) $(K3D_NAME) $(NC)"
+	@echo "\n$(YELLOW)Deploy k3d $(CYAN)$(K3D_NAME) $(NC)"
 	k3d cluster create $(K3D_NAME) --wait $(K3D_ARGS)
