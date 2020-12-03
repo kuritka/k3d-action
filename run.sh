@@ -39,14 +39,14 @@ deploy(){
     if [[ -z "${K3D_NAME}" ]]; then
       panic "K3D_NAME must be set"
     fi
-    local k3dName="${K3D_NAME}"
-    local k3dArgs="${K3D_ARGS}"
+    local k3dName=${K3D_NAME}
+    local k3dArgs=${K3D_ARGS:-}
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
     echo -e "\n${YELLOW}Deploy cluster ${CYAN}$k3dName ${NC}"
-    k3d cluster create "$k3dName" --wait "${k3dArgs}"
+    k3d cluster create "$k3dName" --wait ${k3dArgs}
 }
 
 clean(){
