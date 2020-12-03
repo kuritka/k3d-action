@@ -4,14 +4,14 @@ on:
   [workflow_dispatch, push]
 jobs:
   k3d-inspect:
-    name: Inspect K3d
+    name: Test cluster with multiple server arguments
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./
         name: "test with advanced arguments"
         with:
-          k3d-name: "test01"
+          k3d-name: "test-cluster-1"
           k3d-args: "-p \"80:80@agent[0]\" -p \"443:443@agent[0]\" -p \"5053:53/udp@agent[0]\"  --agents 3 --no-lb --k3s-server-arg \"--no-deploy=traefik,servicelb,metrics-server\" --network bridge"
       - run: kubectl cluster-info
       - run: docker ps -a
