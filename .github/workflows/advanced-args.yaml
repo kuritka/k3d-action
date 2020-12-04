@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Create k3d-action-bridge-network
+        run: docker network create --driver=bridge --subnet=172.16.0.0/24 k3d-action-bridge-network
       - uses: ./
         name: "Test cluster 1"
         with:
@@ -18,6 +20,7 @@ jobs:
             -p "5053:53/udp@agent[0]"
             --agents 3
             --no-lb
+            --network k3d-action-bridge-network
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       - name: Cluster info
         run: kubectl cluster-info --context k3d-test-cluster-1
