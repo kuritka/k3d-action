@@ -44,7 +44,7 @@ jobs:
       - name: Cluster info
         run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
       - name: Nodes
-        # hack, sleep is there to wait until all nodes are created.
+        # hack, wait agents are ready.
         run: |
           docker ps -a
           kubectl config use-context k3d-test-cluster-1

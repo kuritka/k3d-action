@@ -7,11 +7,13 @@ set -o pipefail
 
 YELLOW=
 CYAN=
+RED=
 NC=
 if [[ -z "${NO_COLOR}" ]]; then
       YELLOW="\033[0;33m"
       CYAN="\033[1;36m"
       NC="\033[0m"
+      RED="\033[0;91m"
 fi
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
 
@@ -33,16 +35,17 @@ EOF
 }
 
 panic() {
-  (>&2 echo "$@")
+  (>&2 echo -e " - ${RED}$@${NC}")
+  usage
   exit 1
 }
 
 deploy(){
-    if [[ -z "${K3D_NAME}" ]]; then
+    if [[ -z "${INPUT_K3D_NAME}" ]]; then
       panic "K3D_NAME must be set"
     fi
-    local k3dName=${K3D_NAME}
-    local k3dArgs="${K3D_ARGS:-}"
+    local k3dName=${INPUT_K3D_NAME}
+    local k3dArgs="${INPUT_K3D_ARGS:-}"
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
@@ -52,13 +55,14 @@ deploy(){
 }
 
 clean(){
-    if [[ -z "${K3D_NAME}" ]]; then
+    if [[ -z "${INPUT_K3D_NAME}" ]]; then
       panic "K3D_NAME must be set"
     fi
-    local k3dName="${K3D_NAME}"
+    local k3dName="${INPUT_K3D_NAME}"
     echo -e "\n${YELLOW}Destroy cluster ${CYAN}$k3dName ${NC}"
     eval "k3d cluster delete ${k3dName}"
 }
+
 
 if [[ "$#" -lt 1 ]]; then
   usage
