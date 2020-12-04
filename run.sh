@@ -47,7 +47,7 @@ deploy(){
     local name=${K3D_NAME}
     local arguments="${K3D_ARGS:-}"
     local network="${K3D_NETWORK:$DEFAULT_NETWORK}"
-    local subnet="${K3D_SUBNET:"not defined"}"
+    local subnet="${K3D_SUBNET:not defined}"
     local networkParameter=
 
     n=$(docker network list | grep "$network" | awk '{ printf $2 }' | sed -n 1p)
