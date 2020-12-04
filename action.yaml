@@ -17,12 +17,6 @@ runs:
   steps:
     - id: main
       shell: bash
-      # You may run into issues with grabbing certificates from the API-Server
-      # in case if you use default bridge network. This leads to issues, where single server exists
-      # but nodes are ignored, although they are visible as docker containers. Long story short
-      # `kubectl get nodes` returns single server node instead of server + agent nodes
-      # see: https://k3d.io/internals/networking/#bridge-network
-      # k3d action handles that and puts all clusters into bridge network
       run: ${{ github.action_path }}/run.sh deploy
       env:
         K3D_NAME: ${{ inputs.k3d-name }}
