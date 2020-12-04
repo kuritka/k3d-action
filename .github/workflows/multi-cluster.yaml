@@ -1,4 +1,4 @@
-name: Multicluster test
+name: Multicluster demo
 
 on:
   [workflow_dispatch, push]

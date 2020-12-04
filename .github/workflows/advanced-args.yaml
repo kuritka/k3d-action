@@ -1,4 +1,4 @@
-name: Advanced args test
+name: Single cluster demo
 
 on:
   [workflow_dispatch, push]
