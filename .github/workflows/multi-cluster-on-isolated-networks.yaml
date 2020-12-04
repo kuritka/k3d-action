@@ -12,29 +12,24 @@ jobs:
         name: "Test cluster 1"
         with:
           k3d-name: "test-cluster-1"
-          k3d-network: "nw01"
-          k3d-subnet: "172.16.0.0/24"
           k3d-args: >-
             -p "80:80@agent[0]"
             -p "443:443@agent[0]"
             -p "5053:53/udp@agent[0]"
             --agents 3
             --no-lb
-            --network k3d-action-bridge-network
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
+
       - uses: ./
         name: "Test cluster 2"
         with:
           k3d-name: "test-cluster-2"
-          k3d-network: "nw02"
-          k3d-subnet: "172.16.1.0/24"
           k3d-args: >-
             -p "81:80@agent[0]"
             -p "444:443@agent[0]"
             -p "5054:53/udp@agent[0]"
             --agents 3
             --no-lb
-            --network k3d-action-bridge-network
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
 
       - name: Cluster info
