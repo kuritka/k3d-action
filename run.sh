@@ -49,7 +49,7 @@ deploy(){
     local name=${K3D_NAME}
     local arguments=${K3D_ARGS:-}
     local network=${K3D_NETWORK:$DEFAULT_NETWORK}
-    local cidr=${K3D_CIDR:$DEFAULT_CIDR}
+    local cidr="${K3D_CIDR:$DEFAULT_CIDR}"
 
     echo -e "${YELLOW}name ${CYAN}$name ${NC}"
     echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
