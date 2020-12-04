@@ -12,6 +12,12 @@ inputs:
   k3d-args:
     description: "Additional arguments to k3d cluster. see: https://k3d.io/usage/commands/"
     required: false
+  k3d-network:
+    description: "Cluster network. Default value k3d-action-bridge-network"
+    required: false
+  k3d-cidr:
+    description: "Cluster network CIDR. Default value 172.16.0.0/24 in case k3d-network is not set."
+    required: false
 runs:
   using: composite
   steps:
