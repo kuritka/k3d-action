@@ -4,7 +4,7 @@ on:
   [workflow_dispatch, push]
 jobs:
   k3d-multicluster-demo:
-    name: Multi cluster with default k3d-action-bridge-network
+    name: Multi cluster demo with isolated networks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
