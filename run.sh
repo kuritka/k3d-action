@@ -46,26 +46,26 @@ panic() {
 deploy(){
     local name=${K3D_NAME}
     local arguments="${K3D_ARGS:-}"
-    local network="${K3D_NETWORK:-}"
+    local network="${K3D_NETWORK:$DEFAULT_NETWORK}"
+    local subnet="${K3D_SUBNET:"not defined"}"
+    local networkParameter=
 
-    n=$(docker network list | grep host | awk '{ printf $2 }' | sed -n 1p)
-    if [ "$n" -eq $DEFAULT_NETWORK ]
+    n=$(docker network list | grep "$network" | awk '{ printf $2 }' | sed -n 1p)
+    if [ "$n" -eq "$network" ]
     then
-      docker network create --driver=bridge --subnet=172.16.0.0/24 $DEFAULT_NETWORK
-    fi
-    if [ "$network" -eq $DEFAULT_NETWORK ]
-    then
-      if [ "$n" == $DEFAULT_NETWORK ]
+      if [ $network == $DEFAULT_NETWORK ]
       then
-        panic "You can't create ${network} if ${DEFAULT_NETWORK} exists."
+        subnet=172.16.0.0/24
       fi
+      docker network create --driver=bridge --subnet=$subnet $network
+      networkParameter="--network $network"
     fi
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
     echo -e "\n${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
-    eval "k3d cluster create ${name} --wait ${arguments:-}"
+    eval "k3d cluster create ${name} --wait ${arguments:-} ${networkParameter}"
 }
 
 clean(){

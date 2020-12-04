@@ -21,3 +21,5 @@ runs:
       env:
         K3D_NAME: ${{ inputs.k3d-name }}
         K3D_ARGS: ${{ inputs.k3d-args }}
+        K3D_SUBNET: ${{ inputs.k3d-subnet }}
+        K3D_NETWORK: ${{ inputs.k3d-network }}
