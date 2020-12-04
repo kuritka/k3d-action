@@ -36,7 +36,7 @@ jobs:
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
 
       # hack, wait until agents are ready...
-      - run: sleep 5
+      - run: sleep 10
       - name: Cluster info
         run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
       - name: Nodes

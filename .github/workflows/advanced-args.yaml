@@ -23,7 +23,7 @@ jobs:
             --network k3d-action-bridge-network
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       # hack, wait until agents are ready...
-      - run: sleep 5
+      - run: sleep 10
       - name: Cluster info
         run: kubectl cluster-info --context k3d-test-cluster-1
       - name: Nodes
