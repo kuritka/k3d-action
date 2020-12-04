@@ -39,9 +39,9 @@ jobs:
         with:
           k3d-name: "test-cluster-3"
           k3d-args: >-
-            -p "81:80@agent[0]"
-            -p "444:443@agent[0]"
-            -p "5054:53/udp@agent[0]"
+            -p "83:80@agent[0]"
+            -p "445:443@agent[0]"
+            -p "5055:53/udp@agent[0]"
             --agents 3
             --no-lb
             --network k3d-action-bridge-network
