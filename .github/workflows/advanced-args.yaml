@@ -4,7 +4,7 @@ on:
   [workflow_dispatch, push]
 jobs:
   k3d-single-cluster-demo:
-    name: Single cluster demo
+    name: Single cluster demo with default k3d-action-bridge-network
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,7 +18,6 @@ jobs:
             -p "5053:53/udp@agent[0]"
             --agents 3
             --no-lb
-            --network bridge
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       - name: Cluster info
         run: kubectl cluster-info --context k3d-test-cluster-1
@@ -28,4 +27,4 @@ jobs:
           kubectl config use-context k3d-test-cluster-1
           kubectl get nodes -o wide
       - name: Network
-        run: docker network inspect custom-network
+        run: docker network inspect k3d-action-bridge-network

@@ -48,7 +48,7 @@ deploy(){
     curl --silent --fail ${K3D_URL} | bash
 
     echo -e "\n${YELLOW}Deploy cluster ${CYAN}$k3dName ${NC}"
-    eval "k3d cluster create ${k3dName} --wait ${k3dArgs:-}"
+    eval "k3d cluster create ${k3dName} --wait ${k3dArgs:-} --network=k3d-action-bridge-network"
 }
 
 clean(){
