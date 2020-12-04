@@ -22,9 +22,6 @@ jobs:
             --no-lb
             --network k3d-action-bridge-network
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server --cluster-init"
-      - run: |
-          kubectl config use-context k3d-test-cluster-1
-          kubectl get nodes -o wide
       - uses: ./
         name: "Test cluster 2"
         with:
@@ -37,7 +34,7 @@ jobs:
             --no-lb
             --network k3d-action-bridge-network
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server --cluster-init"
-
+      - run: sleep 10
       - name: Cluster info
         run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
       - name: Nodes
