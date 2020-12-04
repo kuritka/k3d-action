@@ -41,11 +41,11 @@ panic() {
 }
 
 deploy(){
-    if [[ -z "${INPUT_K3D-NAME}" ]]; then
-      panic "INPUT_K3D-NAME must be set"
+    if [[ -z "${INPUT_K3D_NAME}" ]]; then
+      panic "INPUT_K3D_NAME must be set"
     fi
-    local k3dName=${INPUT_K3D-NAME}
-    local k3dArgs="${INPUT_K3D-ARGS:-}"
+    local k3dName=${INPUT_K3D_NAME}
+    local k3dArgs="${INPUT_K3D_ARGS:-}"
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
@@ -55,12 +55,17 @@ deploy(){
 }
 
 clean(){
-    if [[ -z "${INPUT_K3D-NAME}" ]]; then
-      panic "K3D_NAME must be set"
+    if [[ -z "${INPUT_K3D_NAME}" ]]; then
+      panic "INPUT_K3D_NAME must be set"
     fi
-    local k3dName="${INPUT_K3D-NAME}"
+    local k3dName="${INPUT_K3D_NAME}"
     echo -e "\n${YELLOW}Destroy cluster ${CYAN}$k3dName ${NC}"
     eval "k3d cluster delete ${k3dName}"
+}
+
+
+hello(){
+   echo -e "\n${YELLOW}Hello ${CYAN} World ${NC}"
 }
 
 
@@ -75,6 +80,9 @@ case "$1" in
     ;;
     "clean")
        clean
+    ;;
+    "hello")
+       hello
     ;;
       *)
   usage

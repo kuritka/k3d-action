@@ -6,13 +6,14 @@ branding:
   icon: grid
   color: red
 inputs:
-  k3d-name:
+  k3d_name:
     description: "Cluster name."
     required: true
-  k3d-args:
+  k3d_args:
     description: "Additional arguments to k3d cluster. see: https://k3d.io/usage/commands/"
     required: false
 runs:
+  pre: "stop.js"
   using: "node12"
   main: "start.js"
   post: "stop.js"
