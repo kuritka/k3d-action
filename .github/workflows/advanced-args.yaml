@@ -21,7 +21,7 @@ jobs:
             --network bridge
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       - name: Cluster info
-        run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
+        run: kubectl cluster-info --context k3d-test-cluster-1
       - name: Nodes
         run: |
           docker ps -a
