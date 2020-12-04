@@ -2,6 +2,7 @@
 
 set -o errexit
 set -o pipefail
+set -x
 #set -o nounset  ;handling unset environment variables manually
 
 
