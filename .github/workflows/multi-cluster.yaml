@@ -26,7 +26,7 @@ jobs:
             -p "5053:53/udp@agent[0]"
             --agents 3
             --no-lb
-            --network k3d-action-bridge-network
+            --network bridge
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       - uses: ./
         name: "Test cluster 2"
@@ -38,7 +38,7 @@ jobs:
             -p "5054:53/udp@agent[0]"
             --agents 3
             --no-lb
-            --network k3d-action-bridge-network
+            --network bridge
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
 
       - name: Cluster info
