@@ -21,8 +21,8 @@ jobs:
             --agents 3
             --no-lb
             --network k3d-action-bridge-network
-            --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
-            --k3s-server-arg "--cluster-init"
+            --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server --cluster-init"
+
       - uses: ./
         name: "Test cluster 2"
         with:
@@ -34,8 +34,8 @@ jobs:
             --agents 3
             --no-lb
             --network k3d-action-bridge-network
-            --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
-            --k3s-server-arg "--cluster-init"
+            --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server --cluster-init"
+
       - name: Cluster info
         run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
       - name: Nodes
