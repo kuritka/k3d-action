@@ -12,6 +12,8 @@ jobs:
         name: "Test cluster 1"
         with:
           k3d-name: "test-cluster-1"
+          k3d-network: "nw01"
+          k3d-subnet: ""
           k3d-args: >-
             -p "80:80@agent[0]"
             -p "443:443@agent[0]"

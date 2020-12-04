@@ -11,6 +11,7 @@ RED=
 NC=
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
 DEFAULT_NETWORK=k3d-action-bridge-network
+DEFAULT_SUBNET=172.16.0.0/24
 
 #######################
 #
@@ -47,7 +48,7 @@ deploy(){
     local name=${K3D_NAME}
     local arguments="${K3D_ARGS:-}"
     local network="${K3D_NETWORK:$DEFAULT_NETWORK}"
-    local subnet="${K3D_SUBNET:not defined}"
+    local subnet="${K3D_SUBNET:-}"
     local networkParameter=
 
     n=$(docker network list | grep "$network" | awk '{ printf $2 }' | sed -n 1p)
@@ -55,7 +56,7 @@ deploy(){
     then
       if [ $network == $DEFAULT_NETWORK ]
       then
-        subnet=172.16.0.0/24
+        subnet=$DEFAULT_SUBNET
       fi
       docker network create --driver=bridge --subnet=$subnet $network
       networkParameter="--network $network"
