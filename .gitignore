@@ -8,6 +8,6 @@
 !*.yaml
 !*.md
 !*.sh
-
+!*.js
 # ...even if they are in subdirectories
 !*/
