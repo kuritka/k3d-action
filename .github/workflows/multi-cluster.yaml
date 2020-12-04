@@ -3,15 +3,19 @@ name: Multicluster test
 on:
   [workflow_dispatch, push]
 jobs:
-  k3d-inspect:
-    name: Multi cluster on the common bridge network
+  k3d-multicluster-demo:
+    name: Multi cluster with custom bridge network
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: create-network
+      # you may run into issues with grabbing certificates from the API-Server
+      # in case if you use default bridge network. Log story short
+      # `kubectl get nodes` returns only single server node instead of server + agent nodes
+      # see: https://k3d.io/internals/networking/#bridge-network
+      - name: Create network 172.16.0.0/24
         run: docker network create --driver=bridge --subnet=172.16.0.0/24 custom-network
       - uses: ./
-        name: "test-cluster-1 on bridge network"
+        name: "Test cluster 1"
         with:
           k3d-name: "test-cluster-1"
           k3d-args: >-
@@ -21,10 +25,9 @@ jobs:
             --agents 3
             --no-lb
             --network custom-network
-            --wait
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       - uses: ./
-        name: "test-cluster-2 on bridge network"
+        name: "Test cluster 2"
         with:
           k3d-name: "test-cluster-2"
           k3d-args: >-
@@ -34,15 +37,13 @@ jobs:
             --network custom-network
             --agents 3
             --no-lb
-            --wait
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
-
-      - run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
-        name: Cluster info
-      - run: |
+      - name: Cluster info
+        run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
+      - name: Nodes
+        run: |
           docker ps -a
           kubectl config use-context k3d-test-cluster-1
           kubectl get nodes -o wide
-        name: Nodes
-      - run: docker network inspect custom-network
-        name: Network
+      - name: Network
+        run: docker network inspect custom-network
