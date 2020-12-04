@@ -9,14 +9,14 @@ YELLOW=
 CYAN=
 RED=
 NC=
-if [[ -z "${NO_COLOR}" ]]; then
-      YELLOW="\033[0;33m"
-      CYAN="\033[1;36m"
-      NC="\033[0m"
-      RED="\033[0;91m"
-fi
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
 
+
+#######################
+#
+#     FUNCTIONS
+#
+#######################
 usage(){
   cat <<EOF
 
@@ -35,15 +35,13 @@ EOF
 }
 
 panic() {
+  # shellcheck disable=SC2145
   (>&2 echo -e " - ${RED}$@${NC}")
   usage
   exit 1
 }
 
 deploy(){
-    if [[ -z "${K3D_NAME}" ]]; then
-      panic "K3D_NAME must be set"
-    fi
     local k3dName=${K3D_NAME}
     local k3dArgs="${K3D_ARGS:-}"
 
@@ -68,12 +66,31 @@ hello(){
    echo -e "\n${YELLOW}Hello ${CYAN} World ${NC}"
 }
 
-
+#######################
+#
+#     GUARDS SECTION
+#
+#######################
 if [[ "$#" -lt 1 ]]; then
   usage
   exit 1
 fi
+if [[ -z "${NO_COLOR}" ]]; then
+      YELLOW="\033[0;33m"
+      CYAN="\033[1;36m"
+      NC="\033[0m"
+      RED="\033[0;91m"
+fi
+if [[ -z "${K3D_NAME}" ]]; then
+  panic "K3D_NAME must be set"
+fi
 
+
+#######################
+#
+#     COMMANDS
+#
+#######################
 case "$1" in
     "deploy")
        deploy
