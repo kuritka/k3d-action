@@ -51,16 +51,21 @@ deploy(){
     local subnet="${K3D_SUBNET:-}"
     local networkParameter=
 
-    n=$(docker network list | grep "$network" | awk '{ printf $2 }' | sed -n 1p)
-    if [ "$n" -eq "$network" ]
-    then
-      if [ $network == $DEFAULT_NETWORK ]
-      then
-        subnet=$DEFAULT_SUBNET
-      fi
-      docker network create --driver=bridge --subnet=$subnet $network
-      networkParameter="--network $network"
-    fi
+#    n=$(docker network list | grep "$network" | awk '{ printf $2 }' | sed -n 1p)
+#    if [ "$n" -eq "$network" ]
+#    then
+#      if [ $network == $DEFAULT_NETWORK ]
+#      then
+#        subnet=$DEFAULT_SUBNET
+#      fi
+#      docker network create --driver=bridge --subnet=$subnet $network
+#      networkParameter="--network $network"
+#    fi
+
+    echo -e "${YELLOW}network ${CYAN}$network ${NC}"
+    echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
+    echo -e "${YELLOW}name ${CYAN}$name ${NC}"
+    echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
