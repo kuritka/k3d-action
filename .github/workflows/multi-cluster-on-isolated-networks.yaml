@@ -13,7 +13,7 @@ jobs:
         with:
           k3d-name: "test-cluster-1"
           k3d-network: "nw01"
-          k3d-subnet: ""
+          k3d-cidr: "172.20.0.0/24"
           k3d-args: >-
             -p "80:80@agent[0]"
             -p "443:443@agent[0]"
@@ -26,6 +26,8 @@ jobs:
         name: "Test cluster 2"
         with:
           k3d-name: "test-cluster-2"
+          k3d-network: "nw02"
+          k3d-cidr: "172.20.1.0/24"
           k3d-args: >-
             -p "81:80@agent[0]"
             -p "444:443@agent[0]"
