@@ -14,8 +14,8 @@ jobs:
       # `kubectl get nodes` returns single server node instead of server + agent nodes
       # see: https://k3d.io/internals/networking/#bridge-network
       # k3d action handles that and puts all clusters into bridge network
-      - name: Create k3d-action-bridge-network
-        run: docker network create --driver=bridge --subnet=172.16.0.0/24 k3d-action-bridge-network
+#      - name: Create k3d-action-bridge-network
+#        run: docker network create --driver=bridge --subnet=172.16.0.0/24 k3d-action-bridge-network
       - uses: ./
         name: "Test cluster 1"
         with:

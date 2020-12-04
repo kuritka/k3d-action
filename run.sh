@@ -10,7 +10,7 @@ CYAN=
 RED=
 NC=
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
-
+DEFAULT_NETWORK=k3d-action-bridge-network
 
 #######################
 #
@@ -29,6 +29,8 @@ usage(){
       deploy
                         K3D_NAME (Required) k3d cluster name
                         K3D_ARGS (Optional) k3d arguments
+                        K3D_NETWORK (Optional) If not set than default k3d-action-bridge-network is created
+                                               and all clusters share that network.
       clean
                         K3D_NAME (Required) k3d cluster name
 EOF
@@ -42,23 +44,37 @@ panic() {
 }
 
 deploy(){
-    local k3dName=${K3D_NAME}
-    local k3dArgs="${K3D_ARGS:-}"
+    local name=${K3D_NAME}
+    local arguments="${K3D_ARGS:-}"
+    local network="${K3D_NETWORK:-}"
+
+    n=$(docker network list | grep host | awk '{ printf $2 }' | sed -n 1p)
+    if [ "$n" -eq $DEFAULT_NETWORK ]
+    then
+      docker network create --driver=bridge --subnet=172.16.0.0/24 $DEFAULT_NETWORK
+    fi
+    if [ "$network" -eq $DEFAULT_NETWORK ]
+    then
+      if [ "$n" == $DEFAULT_NETWORK ]
+      then
+        panic "You can't create ${network} if ${DEFAULT_NETWORK} exists."
+      fi
+    fi
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
-    echo -e "\n${YELLOW}Deploy cluster ${CYAN}$k3dName ${NC}"
-    eval "k3d cluster create ${k3dName} --wait ${k3dArgs:-}"
+    echo -e "\n${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
+    eval "k3d cluster create ${name} --wait ${arguments:-}"
 }
 
 clean(){
     if [[ -z "${K3D_NAME}" ]]; then
       panic "K3D_NAME must be set"
     fi
-    local k3dName="${K3D_NAME}"
-    echo -e "\n${YELLOW}Destroy cluster ${CYAN}$k3dName ${NC}"
-    eval "k3d cluster delete ${k3dName}"
+    local name="${K3D_NAME}"
+    echo -e "\n${YELLOW}Destroy cluster ${CYAN}$name ${NC}"
+    eval "k3d cluster delete ${name}"
 }
 
 
