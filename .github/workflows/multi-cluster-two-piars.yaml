@@ -1,4 +1,4 @@
-name: Multicluster demo, two pair on isolated networks
+name: Multicluster demo, two pairs on two isolated networks
 
 on:
   [workflow_dispatch, push]
@@ -53,13 +53,13 @@ jobs:
 
       - name: Cluster info
         run: |
-          kubectl cluster-info --context test-cluster-1-a
-          kubectl cluster-info --context test-cluster-2-a
-          kubectl cluster-info --context test-cluster-1-b
-          kubectl cluster-info --context test-cluster-2-b
+          kubectl cluster-info --context k3d-test-cluster-1-a
+          kubectl cluster-info --context k3d-test-cluster-2-a
+          kubectl cluster-info --context k3d-test-cluster-1-b
+          kubectl cluster-info --context k3d-test-cluster-2-b
 
       - name: Nodes
-        # hack, wait agents are ready.
+        # hack, wait until all agents are ready.
         run: |
           docker ps -a
           docker network list
