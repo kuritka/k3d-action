@@ -62,7 +62,6 @@ jobs:
         # hack, wait until all agents are ready.
         run: |
           docker ps -a
-          docker network list
           sleep 5
           kubectl config use-context k3d-test-cluster-1-a
           kubectl get nodes -o wide
@@ -75,5 +74,6 @@ jobs:
 
       - name: Network
         run: |
+          docker network list
           docker network inspect nw01
           docker network inspect nw02

@@ -54,7 +54,7 @@ deploy(){
     echo -e "${YELLOW}name ${CYAN}$name ${NC}"
     echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
     echo -e "${YELLOW}network ${CYAN}$network ${NC}"
-    echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
+
 
    existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
 
@@ -71,6 +71,7 @@ deploy(){
       fi
     fi
 
+    echo -e "${YELLOW}subnet ${CYAN}$existing_network ${NC}"
     echo
 
     # create network if doesn't exists
