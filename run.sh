@@ -2,8 +2,8 @@
 
 set -o errexit
 set -o pipefail
-#set -o nounset  ;handling unset environment variables manually
-
+#set -o nounset     ;handling unset environment variables manually
+#set -x             ;debugging
 
 YELLOW=
 CYAN=
@@ -12,6 +12,7 @@ NC=
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
 DEFAULT_NETWORK=k3d-action-bridge-network
 DEFAULT_CIDR=172.16.0.0/24
+NOT_FOUND=network-not-found
 
 #######################
 #
@@ -55,28 +56,32 @@ deploy(){
     echo -e "${YELLOW}network ${CYAN}$network ${NC}"
     echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
 
-
-    if [[ ($network == $DEFAULT_NETWORK) && ($subnet != $DEFAULT_CIDR) ]]
+    if [[ ($network == "$DEFAULT_NETWORK") && ($subnet != "$DEFAULT_CIDR") ]]
     then
       panic "You can't specify custom subnet for default network."
     fi
 
-    if [[ ($network != $DEFAULT_NETWORK) && ($subnet == $DEFAULT_CIDR) ]]
+    if [[ ($network != "$DEFAULT_NETWORK") && ($subnet == "$DEFAULT_CIDR") ]]
     then
       panic "Subnet CIDR must be specified for custom network"
     fi
 
-    # create network if doesn't exists otherwise nodes will be added to $network
-    n=$(docker network list | grep "$network" | awk '{ printf $2 }' | sed -n 1p)
-    if [[ "$n" != "$network" ]]
+    echo
+    # create network if doesn't exists otherwise
+    # awk '/CLUSTER_GEO_TAG/ { printf $$2 }'
+    found=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
+    if [[ "$found" == $NOT_FOUND ]]
     then
-      docker network create --driver=bridge --subnet=$subnet $network
+      echo -e "${YELLOW}create new network ${CYAN}$network $subnet ${NC}"
+      docker network create --driver=bridge --subnet="$subnet" "$network"
+    else
+      echo -e "${YELLOW}attaching nodes to existing ${CYAN}$network ${NC}"
     fi
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
-    echo -e "\n${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
+    echo -e "\found${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
     eval "k3d cluster create $name --wait $arguments --network $network"
 }
 
@@ -85,7 +90,7 @@ clean(){
       panic "K3D_NAME must be set"
     fi
     local name="${K3D_NAME}"
-    echo -e "\n${YELLOW}Destroy cluster ${CYAN}$name ${NC}"
+    echo -e "\found${YELLOW}Destroy cluster ${CYAN}$name ${NC}"
     eval "k3d cluster delete ${name}"
 }
 
