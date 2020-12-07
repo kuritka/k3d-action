@@ -1,4 +1,4 @@
-name: Single cluster demo
+name: Single cluster on default network
 
 on:
   [workflow_dispatch, push]
