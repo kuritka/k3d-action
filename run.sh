@@ -11,8 +11,8 @@ CYAN=
 RED=
 NC=
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
-DEFAULT_NETWORK="k3d-action-bridge-network"
-DEFAULT_CIDR="172.16.0.0/24"
+DEFAULT_NETWORK=k3d-action-bridge-network
+DEFAULT_CIDR=172.16.0.0/24
 
 #######################
 #
@@ -49,30 +49,35 @@ deploy(){
     local name=${K3D_NAME}
     local arguments=${K3D_ARGS:-}
     local network=${K3D_NETWORK:-$DEFAULT_NETWORK}
-    local subnet="${K3D_CIDR:-$DEFAULT_CIDR}"
+    local subnet=${K3D_CIDR:-$DEFAULT_CIDR}
 
-    @echo -e "${YELLOW}name ${CYAN}$name ${NC}"
-    @echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
-    @echo -e "${YELLOW}network ${CYAN}$network ${NC}"
-    @echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
+    echo -e "${YELLOW}name ${CYAN}$name ${NC}"
+    echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
+    echo -e "${YELLOW}network ${CYAN}$network ${NC}"
+    echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
 
 
-    if [[ ("$network" == "$DEFAULT_NETWORK") && ("$subnet" != "$DEFAULT_CIDR") ]]
+    if [[ ($network == $DEFAULT_NETWORK) && ($subnet != $DEFAULT_CIDR) ]]
     then
       panic "You can't specify custom subnet for default network."
     fi
 
-    if [[ ("$network" != "$DEFAULT_NETWORK") && ("$subnet" == "$DEFAULT_CIDR") ]]
+    if [[ ($network != $DEFAULT_NETWORK) && ($subnet == $DEFAULT_CIDR) ]]
     then
       panic "Subnet CIDR must be specified for custom network"
     fi
 
-    docker network create --driver=bridge --subnet=$subnet $network
+    # create network if doesn't exists otherwise nodes will be added to $network
+    n=$(docker network list | grep "$network" | awk '{ printf $2 }' | sed -n 1p)
+    if [[ "$n" != "$network" ]]
+    then
+      docker network create --driver=bridge --subnet=$subnet $network
+    fi
 
-    @echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
+    echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
-    @echo -e "\n${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
+    echo -e "\n${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
     eval "k3d cluster create $name --wait $arguments --network $network"
 }
 
