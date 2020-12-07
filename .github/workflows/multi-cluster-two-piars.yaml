@@ -64,13 +64,13 @@ jobs:
           docker ps -a
           docker network list
           sleep 5
-          kubectl config use-context test-cluster-1-a
+          kubectl config use-context k3d-test-cluster-1-a
           kubectl get nodes -o wide
-          kubectl config use-context test-cluster-1-b
+          kubectl config use-context k3d-test-cluster-1-b
           kubectl get nodes -o wide
-          kubectl config use-context test-cluster-2-a
+          kubectl config use-context k3d-test-cluster-2-a
           kubectl get nodes -o wide
-          kubectl config use-context test-cluster-2-b
+          kubectl config use-context k3d-test-cluster-2-b
           kubectl get nodes -o wide
 
       - name: Network
