@@ -51,10 +51,10 @@ deploy(){
     local network=${K3D_NETWORK:-$DEFAULT_NETWORK}
     local subnet="${K3D_CIDR:-$DEFAULT_CIDR}"
 
-    echo -e "${YELLOW}name ${CYAN}$name ${NC}"
-    echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
-    echo -e "${YELLOW}network ${CYAN}$network ${NC}"
-    echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
+    @echo -e "${YELLOW}name ${CYAN}$name ${NC}"
+    @echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
+    @echo -e "${YELLOW}network ${CYAN}$network ${NC}"
+    @echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
 
 
     if [[ ("$network" == "$DEFAULT_NETWORK") && ("$subnet" != "$DEFAULT_CIDR") ]]
@@ -69,10 +69,10 @@ deploy(){
 
     docker network create --driver=bridge --subnet=$subnet $network
 
-    echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
+    @echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
-    echo -e "\n${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
+    @echo -e "\n${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
     eval "k3d cluster create $name --wait $arguments --network $network"
 }
 
@@ -85,10 +85,6 @@ clean(){
     eval "k3d cluster delete ${name}"
 }
 
-
-hello(){
-   echo -e "\n${YELLOW}Hello ${CYAN} World ${NC}"
-}
 
 #######################
 #
@@ -121,9 +117,6 @@ case "$1" in
     ;;
     "clean")
        clean
-    ;;
-    "hello")
-       hello
     ;;
       *)
   usage
