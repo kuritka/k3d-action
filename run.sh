@@ -71,7 +71,6 @@ deploy(){
       fi
     fi
 
-    echo -e "${YELLOW}subnet ${CYAN}$existing_network ${NC}"
     echo
 
     # create network if doesn't exists
