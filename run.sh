@@ -11,8 +11,8 @@ CYAN=
 RED=
 NC=
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
-DEFAULT_NETWORK=k3d-action-bridge-network
-DEFAULT_CIDR=172.16.0.0/24
+DEFAULT_NETWORK="k3d-action-bridge-network"
+DEFAULT_CIDR="172.16.0.0/24"
 
 #######################
 #
@@ -48,15 +48,26 @@ panic() {
 deploy(){
     local name=${K3D_NAME}
     local arguments=${K3D_ARGS:-}
-    local network=${K3D_NETWORK:$DEFAULT_NETWORK}
-    local cidr="${K3D_CIDR:$DEFAULT_CIDR}"
+    local network=${K3D_NETWORK:-$DEFAULT_NETWORK}
+    local subnet="${K3D_CIDR:-$DEFAULT_CIDR}"
 
     echo -e "${YELLOW}name ${CYAN}$name ${NC}"
     echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
     echo -e "${YELLOW}network ${CYAN}$network ${NC}"
-    echo -e "${YELLOW}cidr ${CYAN}$cidr ${NC}"
+    echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
 
-    docker network create --driver=bridge --cidr=$cidr $network
+
+    if [[ ("$network" == "$DEFAULT_NETWORK") && ("$subnet" != "$DEFAULT_CIDR") ]]
+    then
+      panic "You can't specify custom subnet for default network."
+    fi
+
+    if [[ ("$network" != "$DEFAULT_NETWORK") && ("$subnet" == "$DEFAULT_CIDR") ]]
+    then
+      panic "Subnet CIDR must be specified for custom network"
+    fi
+
+    docker network create --driver=bridge --subnet=$subnet $network
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
