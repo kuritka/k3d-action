@@ -12,7 +12,7 @@ NC=
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
 DEFAULT_NETWORK=k3d-action-bridge-network
 DEFAULT_CIDR=172.16.0.0/24
-NOT_FOUND=network-not-found
+NOT_FOUND=k3d-not-found-network
 
 #######################
 #
@@ -56,6 +56,8 @@ deploy(){
     echo -e "${YELLOW}network ${CYAN}$network ${NC}"
     echo -e "${YELLOW}subnet ${CYAN}$subnet ${NC}"
 
+   existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
+
     if [[ ($network == "$DEFAULT_NETWORK") && ($subnet != "$DEFAULT_CIDR") ]]
     then
       panic "You can't specify custom subnet for default network."
@@ -63,14 +65,16 @@ deploy(){
 
     if [[ ($network != "$DEFAULT_NETWORK") && ($subnet == "$DEFAULT_CIDR") ]]
     then
-      panic "Subnet CIDR must be specified for custom network"
+      if [[ "$existing_network" == "$NOT_FOUND" ]]
+      then
+        panic "Subnet CIDR must be specified for custom network"
+      fi
     fi
 
     echo
-    # create network if doesn't exists otherwise
-    # awk '/CLUSTER_GEO_TAG/ { printf $$2 }'
-    found=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
-    if [[ "$found" == $NOT_FOUND ]]
+
+    # create network if doesn't exists
+    if [[ "$existing_network" == "$NOT_FOUND" ]]
     then
       echo -e "${YELLOW}create new network ${CYAN}$network $subnet ${NC}"
       docker network create --driver=bridge --subnet="$subnet" "$network"
@@ -81,7 +85,7 @@ deploy(){
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
-    echo -e "\found${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
+    echo -e "\existing_network${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
     eval "k3d cluster create $name --wait $arguments --network $network"
 }
 
@@ -90,7 +94,7 @@ clean(){
       panic "K3D_NAME must be set"
     fi
     local name="${K3D_NAME}"
-    echo -e "\found${YELLOW}Destroy cluster ${CYAN}$name ${NC}"
+    echo -e "\existing_network${YELLOW}Destroy cluster ${CYAN}$name ${NC}"
     eval "k3d cluster delete ${name}"
 }
 
