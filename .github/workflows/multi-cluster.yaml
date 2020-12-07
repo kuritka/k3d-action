@@ -1,4 +1,4 @@
-name: Multicluster demo
+name: Multicluster demo; two clusters within one default network
 
 on:
   [workflow_dispatch, push]

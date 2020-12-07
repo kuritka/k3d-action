@@ -1,4 +1,4 @@
-name: Multicluster demo on isolated networks
+name: Multicluster demo; two clusters on two isolated networks
 
 on:
   [workflow_dispatch, push]
