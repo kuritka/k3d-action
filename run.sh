@@ -52,6 +52,7 @@ deploy(){
     local network=${K3D_NETWORK:-$DEFAULT_NETWORK}
     local subnet=${K3D_CIDR:-$DEFAULT_CIDR}
     local registry=${K3D_REGISTRY:-}
+    local registryArg
 
    existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
 
@@ -83,8 +84,8 @@ deploy(){
     if [[ "$registry" == "true" ]]
     then
       echo -e "${YELLOW}attaching registry to ${CYAN}$network ${NC}"
-      x=$(registry"$network")
-      echo "$x"
+      registryArg=$(registry "$network")
+      echo "$registryArg"
     fi
 
     # Setup GitHub Actions outputs
@@ -95,7 +96,7 @@ deploy(){
     curl --silent --fail ${K3D_URL} | bash
 
     echo -e "\existing_network${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
-    eval "k3d cluster create $name --wait $arguments --network $network"
+    eval "k3d cluster create $name --wait $arguments --network $network $registryArg"
 }
 
 
