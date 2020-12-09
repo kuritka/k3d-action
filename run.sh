@@ -27,7 +27,6 @@ usage(){
   Usage: $(basename "$0") <COMMAND>
   Commands:
       deploy            deploy custom k3d cluster
-      clean             destroy k3d cluster
 
   Environment variables:
       deploy
@@ -35,8 +34,10 @@ usage(){
                         K3D_ARGS (Optional) k3d arguments
                         K3D_NETWORK (Optional) If not set than default k3d-action-bridge-network is created
                                                and all clusters share that network.
-      clean
-                        K3D_NAME (Required) k3d cluster name
+                        K3D_SUBNET (Optional) If not set than default 172.16.0.0/24 is used. Variable requires
+                                              K3D_NETWORK to be set
+                        K3D_REGISTRY (Optional) If true, provides local registry registry.localhost:5000 without
+                                              TLS and authentication
 EOF
 }
 
@@ -117,6 +118,7 @@ registry(){
     fi
 }
 
+# see: https://rancher.com/docs/k3s/latest/en/installation/private-registry/#mirrors
 inject_configuration(){
    cat > "${REGISTRY_CONFIG_PATH}" <<EOF
 mirrors:
@@ -125,17 +127,6 @@ mirrors:
       - "http://registry.local:5000"
 EOF
 }
-
-
-clean(){
-    if [[ -z "${K3D_NAME}" ]]; then
-      panic "K3D_NAME must be set"
-    fi
-    local name="${K3D_NAME}"
-    echo -e "\existing_network${YELLOW}Destroy cluster ${CYAN}$name ${NC}"
-    eval "k3d cluster delete ${name}"
-}
-
 
 #######################
 #
@@ -156,7 +147,6 @@ if [[ -z "${K3D_NAME}" ]]; then
   panic "K3D_NAME must be set"
 fi
 
-
 #######################
 #
 #     COMMANDS
@@ -166,9 +156,9 @@ case "$1" in
     "deploy")
        deploy
     ;;
-    "clean")
-       clean
-    ;;
+#    "<put new command here>")
+#       command_handler
+#    ;;
       *)
   usage
   exit 0
