@@ -84,10 +84,9 @@ deploy(){
     if [[ "$registry" == "true" ]]
     then
       echo -e "${YELLOW}attaching registry to ${CYAN}$network ${NC}"
-      registryArg=$(registry "$network")
-      echo "add new arg: $registryArg"
+      registry "$network"
+      registryArg="--volume \"$(pwd)/registries.yaml:/etc/rancher/k3s/registries.yaml\""
     fi
-    echo "add new arg: $registryArg"
 
     # Setup GitHub Actions outputs
     echo "::set-output name=k3d-network::$network"
@@ -107,7 +106,6 @@ registry(){
     docker volume create local_registry
     docker container run -d --name ${REGISTRY_LOCAL} -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
     docker network connect "$network" ${REGISTRY_LOCAL}
-    echo "--volume \"$pwd/registries.yaml:/etc/rancher/k3s/registries.yaml\""
 }
 
 clean(){
