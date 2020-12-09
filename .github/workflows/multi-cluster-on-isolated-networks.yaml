@@ -37,7 +37,11 @@ jobs:
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
 
       - name: Cluster info
-        run: kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
+        run: |
+          echo test-cluster-1: ${{ steps.test-cluster-1.outputs.k3d-network }} ${{ steps.test-cluster-1.outputs.k3d-cidr }}
+          echo test-cluster-2: ${{ steps.test-cluster-2.outputs.k3d-network }} ${{ steps.test-cluster-2.outputs.k3d-cidr }}
+          echo
+          kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
       - name: Nodes
         # hack, wait until all agents are ready.
         run: |

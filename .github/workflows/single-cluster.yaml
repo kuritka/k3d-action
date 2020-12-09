@@ -24,6 +24,7 @@ jobs:
       - name: Cluster info
         run: |
           echo ${{ steps.single-cluster.outputs.k3d-network }} ${{ steps.single-cluster.outputs.k3d-cidr }}
+          echo
           kubectl cluster-info --context k3d-test-cluster-1
       - name: Nodes
         # hack, wait until agents are ready...
