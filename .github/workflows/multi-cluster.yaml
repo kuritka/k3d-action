@@ -1,21 +1,15 @@
-name: Multicluster demo; two clusters within one default network
+name: Multi cluster; two clusters within one default network
 
 on:
   [workflow_dispatch, push]
 jobs:
   k3d-multicluster-demo:
-    name: Multi cluster with default k3d-action-bridge-network
+    name: Two clusters within one default network
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # You may run into issues with grabbing certificates from the API-Server
-      # in case if you use default bridge network. This leads to issues, where single server exists
-      # but nodes are ignored, although they are visible as docker containers. Long story short
-      # `kubectl get nodes` returns single server node instead of server + agent nodes
-      # see: https://k3d.io/internals/networking/#bridge-network
-      # k3d action handles that and puts all clusters into bridge network
       - uses: ./
-        name: "Test cluster 1"
+        name: "Create 1st k3d Cluster"
         with:
           k3d-name: "test-cluster-1"
           k3d-args: >-
@@ -27,7 +21,7 @@ jobs:
             --network k3d-action-bridge-network
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       - uses: ./
-        name: "Test cluster 2"
+        name: "Create 2nd k3d Cluster"
         with:
           k3d-name: "test-cluster-2"
           k3d-args: >-

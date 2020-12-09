@@ -1,15 +1,15 @@
-name: Multicluster demo; two clusters on two isolated networks
+name: Multi cluster demo; two clusters on two isolated networks
 
 on:
   [workflow_dispatch, push]
 jobs:
   k3d-multicluster-demo:
-    name: Multi cluster demo with isolated networks
+    name: Two clusters on two isolated networks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./
-        name: "Test cluster 1"
+        name: "Create 1st k3d Cluster in 172.20.0.0/24"
         with:
           k3d-name: "test-cluster-1"
           k3d-network: "nw01"
@@ -23,7 +23,7 @@ jobs:
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
 
       - uses: ./
-        name: "Test cluster 2"
+        name: "Create 1nd k3d Cluster in 172.20.1.0/24"
         with:
           k3d-name: "test-cluster-2"
           k3d-network: "nw02"

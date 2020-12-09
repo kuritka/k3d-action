@@ -82,6 +82,10 @@ deploy(){
       echo -e "${YELLOW}attaching nodes to existing ${CYAN}$network ${NC}"
     fi
 
+    # Communicate back to GitHub Actions.
+    echo "::set-output name=k3d-network::$network"
+    echo "::set-output name=k3d-cidr::$subnet"
+
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
 
