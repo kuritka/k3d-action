@@ -37,4 +37,3 @@ jobs:
           echo ${{ steps.test-cluster-1.outputs.k3d-network }}
           echo ${{ steps.test-cluster-1.outputs.k3d-cidr }}
           echo ${{ steps.CreateSingleK3dCluster.outputs.k3d-cidr }}
-          echo ${{ steps.Create single k3d Cluster.outputs.k3d-cidr }}
