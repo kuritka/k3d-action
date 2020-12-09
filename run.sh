@@ -82,8 +82,9 @@ deploy(){
 
     if [[ "$registry" == "true" ]]
     then
-      x=registry
-      echo $x
+      echo -e "${YELLOW}attaching registry to ${CYAN}$network ${NC}"
+      x=$(registry"$network")
+      echo "$x"
     fi
 
     # Setup GitHub Actions outputs
