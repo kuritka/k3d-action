@@ -14,7 +14,7 @@ jobs:
         with:
           k3d-name: "test-cluster-1-a"
           k3d-network: "nw01"
-          k3d-cidr: "172.20.0.0/24"
+          k3d-subnet: "172.20.0.0/24"
           k3d-args: >-
             --agents 3
             --no-lb
@@ -37,7 +37,7 @@ jobs:
         with:
           k3d-name: "test-cluster-1-b"
           k3d-network: "nw02"
-          k3d-cidr: "172.20.1.0/24"
+          k3d-subnet: "172.20.1.0/24"
           k3d-args: >-
             --agents 3
             --no-lb
@@ -57,10 +57,10 @@ jobs:
       - name: Cluster info
         run: |
           echo
-          echo test-cluster-1-a: ${{ steps.test-cluster-1-a.outputs.k3d-network }} ${{ steps.test-cluster-1-a.outputs.k3d-cidr }}
-          echo test-cluster-1-b: ${{ steps.test-cluster-1-b.outputs.k3d-network }} ${{ steps.test-cluster-1-b.outputs.k3d-cidr }}
-          echo test-cluster-2-a: ${{ steps.test-cluster-2-a.outputs.k3d-network }} ${{ steps.test-cluster-2-a.outputs.k3d-cidr }}
-          echo test-cluster-2-b: ${{ steps.test-cluster-2-b.outputs.k3d-network }} ${{ steps.test-cluster-2-b.outputs.k3d-cidr }}
+          echo test-cluster-1-a: ${{ steps.test-cluster-1-a.outputs.k3d-network }} ${{ steps.test-cluster-1-a.outputs.k3d-subnet }}
+          echo test-cluster-1-b: ${{ steps.test-cluster-1-b.outputs.k3d-network }} ${{ steps.test-cluster-1-b.outputs.k3d-subnet }}
+          echo test-cluster-2-a: ${{ steps.test-cluster-2-a.outputs.k3d-network }} ${{ steps.test-cluster-2-a.outputs.k3d-subnet }}
+          echo test-cluster-2-b: ${{ steps.test-cluster-2-b.outputs.k3d-network }} ${{ steps.test-cluster-2-b.outputs.k3d-subnet }}
           echo
           kubectl cluster-info --context k3d-test-cluster-1-a
           kubectl cluster-info --context k3d-test-cluster-2-a

@@ -91,7 +91,7 @@ deploy(){
 
     # Setup GitHub Actions outputs
     echo "::set-output name=k3d-network::$network"
-    echo "::set-output name=k3d-cidr::$subnet"
+    echo "::set-output name=k3d-subnet::$subnet"
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash

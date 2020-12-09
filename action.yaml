@@ -15,7 +15,7 @@ inputs:
   k3d-network:
     description: "(Optional) Cluster network. Default value k3d-action-bridge-network"
     required: false
-  k3d-cidr:
+  k3d-subnet:
     description: "(Optional) Cluster subnet CIDR. Default value 172.16.0.0/24 in case k3d-network is not set."
     required: false
   k3d-registry:
@@ -26,9 +26,9 @@ outputs:
   k3d-network:
     description: "Detected k3d version"
     value: ${{ steps.main.outputs.k3d-network }}
-  k3d-cidr:
+  k3d-subnet:
     description: "Detected k3d network subnet"
-    value: ${{ steps.main.outputs.k3d-cidr }}
+    value: ${{ steps.main.outputs.k3d-subnet }}
 runs:
   using: composite
   steps:
@@ -39,5 +39,5 @@ runs:
         K3D_NAME: ${{ inputs.k3d-name }}
         K3D_ARGS: ${{ inputs.k3d-args }}
         K3D_NETWORK: ${{ inputs.k3d-network }}
-        K3D_CIDR: ${{ inputs.k3d-cidr }}
+        K3D_CIDR: ${{ inputs.k3d-subnet }}
         K3D_REGISTRY: ${{ inputs.k3d-registry }}
