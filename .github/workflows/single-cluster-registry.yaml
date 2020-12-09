@@ -13,11 +13,9 @@ jobs:
         name: "Create single k3d Cluster"
         with:
           k3d-name: "test-cluster-1"
+          k3d-registry: true
           k3d-args: >-
-            -p "80:80@agent[0]"
-            -p "443:443@agent[0]"
-            -p "5053:53/udp@agent[0]"
-            --agents 3
+            --agents 1
             --no-lb
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       - name: Cluster info

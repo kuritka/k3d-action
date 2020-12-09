@@ -13,6 +13,7 @@ K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
 DEFAULT_NETWORK=k3d-action-bridge-network
 DEFAULT_CIDR=172.16.0.0/24
 NOT_FOUND=k3d-not-found-network
+REGISTRY_LOCAL=registry.local
 
 #######################
 #
@@ -50,6 +51,7 @@ deploy(){
     local arguments=${K3D_ARGS:-}
     local network=${K3D_NETWORK:-$DEFAULT_NETWORK}
     local subnet=${K3D_CIDR:-$DEFAULT_CIDR}
+    local registry=${K3D_REGISTRY:-}
 
    existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
 
@@ -78,7 +80,13 @@ deploy(){
       subnet=$(docker network inspect "$network" -f '{{(index .IPAM.Config 0).Subnet}}')
     fi
 
-    # Communicate back to GitHub Actions.
+    if [[ "$registry" == "true" ]]
+    then
+      x=registry
+      echo $x
+    fi
+
+    # Setup GitHub Actions outputs
     echo "::set-output name=k3d-network::$network"
     echo "::set-output name=k3d-cidr::$subnet"
 
@@ -87,6 +95,19 @@ deploy(){
 
     echo -e "\existing_network${YELLOW}Deploy cluster ${CYAN}$name ${NC}"
     eval "k3d cluster create $name --wait $arguments --network $network"
+}
+
+
+registry(){
+    local network=$1
+    local pwd=$(pwd)
+
+    docker volume create local_registry
+    docker container run -d --name ${REGISTRY_LOCAL} -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
+    docker network connect "$network" ${REGISTRY_LOCAL}
+
+    ret="--volume \""$pwd"/registries.yaml:/etc/rancher/k3s/registries.yaml\""
+    return "$ret"
 }
 
 clean(){
