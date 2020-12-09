@@ -14,6 +14,7 @@ DEFAULT_NETWORK=k3d-action-bridge-network
 DEFAULT_CIDR=172.16.0.0/24
 NOT_FOUND=k3d-not-found-network
 REGISTRY_LOCAL=registry.local
+REGISTRY_CONFIG_PATH="$(pwd)/registries.yaml"
 
 #######################
 #
@@ -85,7 +86,7 @@ deploy(){
     then
       echo -e "${YELLOW}attaching registry to ${CYAN}$network ${NC}"
       registry "$network"
-      registryArg="--volume \"$(pwd)/registries.yaml:/etc/rancher/k3s/registries.yaml\""
+      registryArg="--volume \"${REGISTRY_CONFIG_PATH}:/etc/rancher/k3s/registries.yaml\""
     fi
 
     # Setup GitHub Actions outputs
@@ -104,6 +105,7 @@ registry(){
     # create registry if not exists
     if [ ! "$(docker ps -q -f name=${REGISTRY_LOCAL})" ];
     then
+      registries
       docker volume create local_registry
       docker container run -d --name ${REGISTRY_LOCAL} -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
     fi
@@ -114,6 +116,16 @@ registry(){
       docker network connect "$network" ${REGISTRY_LOCAL}
     fi
 }
+
+registries(){
+   cat > "${REGISTRY_CONFIG_PATH}" <<EOF
+mirrors:
+  "registry.localhost:5000":
+    endpoint:
+      - "http://registry.local:5000"
+EOF
+}
+
 
 clean(){
     if [[ -z "${K3D_NAME}" ]]; then
