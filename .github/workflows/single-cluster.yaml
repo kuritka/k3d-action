@@ -34,5 +34,5 @@ jobs:
       - name: Output
         run: |
           echo ${{ steps }}
-          echo ${{ steps."Create single k3d Cluster".outputs.k3d-network }}
-          echo ${{ steps."Create single k3d Cluster".outputs.k3d-cidr }}
+          echo ${{ steps.Createsinglek3dCluster.outputs.k3d-network }}
+          echo ${{ steps.Createsinglek3dCluster.outputs.k3d-cidr }}
