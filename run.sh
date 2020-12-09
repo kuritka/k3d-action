@@ -11,7 +11,7 @@ RED=
 NC=
 K3D_URL=https://raw.githubusercontent.com/rancher/k3d/main/install.sh
 DEFAULT_NETWORK=k3d-action-bridge-network
-DEFAULT_CIDR=172.16.0.0/24
+DEFAULT_SUBNET=172.16.0.0/24
 NOT_FOUND=k3d-not-found-network
 REGISTRY_LOCAL=registry.local
 REGISTRY_CONFIG_PATH="$(pwd)/registries.yaml"
@@ -51,18 +51,18 @@ deploy(){
     local name=${K3D_NAME}
     local arguments=${K3D_ARGS:-}
     local network=${K3D_NETWORK:-$DEFAULT_NETWORK}
-    local subnet=${K3D_CIDR:-$DEFAULT_CIDR}
+    local subnet=${K3D_SUBNET:-$DEFAULT_SUBNET}
     local registry=${K3D_REGISTRY:-}
     local registryArg
 
-   existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
+    existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
 
-    if [[ ($network == "$DEFAULT_NETWORK") && ($subnet != "$DEFAULT_CIDR") ]]
+    if [[ ($network == "$DEFAULT_NETWORK") && ($subnet != "$DEFAULT_SUBNET") ]]
     then
       panic "You can't specify custom subnet for default network."
     fi
 
-    if [[ ($network != "$DEFAULT_NETWORK") && ($subnet == "$DEFAULT_CIDR") ]]
+    if [[ ($network != "$DEFAULT_NETWORK") && ($subnet == "$DEFAULT_SUBNET") ]]
     then
       if [[ "$existing_network" == "$NOT_FOUND" ]]
       then
