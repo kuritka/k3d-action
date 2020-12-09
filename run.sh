@@ -75,6 +75,7 @@ deploy(){
       docker network create --driver=bridge --subnet="$subnet" "$network"
     else
       echo -e "${YELLOW}attaching nodes to existing ${CYAN}$network ${NC}"
+      cidr=$(docker network inspect test-gslb-bridge -f '{{(index .IPAM.Config 0).Subnet}}')
     fi
 
     # Communicate back to GitHub Actions.
