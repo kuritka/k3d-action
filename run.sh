@@ -84,6 +84,7 @@ deploy(){
     if [[ "$registry" == "true" ]]
     then
       echo -e "${YELLOW}attaching registry to ${CYAN}$network ${NC}"
+      registryArg=""
       registryArg=$(registry "$network")
       echo "$registryArg"
     fi
@@ -103,11 +104,9 @@ deploy(){
 registry(){
     local network=$1
     local pwd=$(pwd)
-
     docker volume create local_registry
     docker container run -d --name ${REGISTRY_LOCAL} -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
     docker network connect "$network" ${REGISTRY_LOCAL}
-
     ret="--volume '$pwd/registries.yaml:/etc/rancher/k3s/registries.yaml'"
     return "$ret"
 }
