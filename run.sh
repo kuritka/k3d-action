@@ -99,13 +99,20 @@ deploy(){
     eval "k3d cluster create $name --wait $arguments --network $network $registryArg"
 }
 
-
 registry(){
     local network=$1
-    local pwd=$(pwd)
-    docker volume create local_registry
-    docker container run -d --name ${REGISTRY_LOCAL} -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
-    docker network connect "$network" ${REGISTRY_LOCAL}
+    # create registry if not exists
+    if [ ! "$(docker ps -q -f name=${REGISTRY_LOCAL})" ];
+    then
+      docker volume create local_registry
+      docker container run -d --name ${REGISTRY_LOCAL} -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
+    fi
+    # connect registry to network if not connected yet
+    containsRegistry=$(docker network inspect "$network" | grep ${REGISTRY_LOCAL} || echo $NOT_FOUND)
+    if [[ "$containsRegistry" == "$NOT_FOUND" ]]
+    then
+      docker network connect "$network" ${REGISTRY_LOCAL}
+    fi
 }
 
 clean(){
