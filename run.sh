@@ -51,11 +51,6 @@ deploy(){
     local network=${K3D_NETWORK:-$DEFAULT_NETWORK}
     local subnet=${K3D_CIDR:-$DEFAULT_CIDR}
 
-    echo -e "${YELLOW}name ${CYAN}$name ${NC}"
-    echo -e "${YELLOW}arguments ${CYAN}$arguments ${NC}"
-    echo -e "${YELLOW}network ${CYAN}$network ${NC}"
-
-
    existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
 
     if [[ ($network == "$DEFAULT_NETWORK") && ($subnet != "$DEFAULT_CIDR") ]]

@@ -1,11 +1,11 @@
-name: Multi cluster; two clusters within one default network
+name: Multi cluster; two clusters within default network
 
 on:
   [workflow_dispatch, push]
 jobs:
   k3d-multicluster-demo:
-    name: Two clusters within one default network
-    runs-on: ubuntu-latest
+    name: Two clusters within default network
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: ./
