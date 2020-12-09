@@ -105,7 +105,7 @@ registry(){
     # create registry if not exists
     if [ ! "$(docker ps -q -f name=${REGISTRY_LOCAL})" ];
     then
-      registries
+      inject_configuration
       docker volume create local_registry
       docker container run -d --name ${REGISTRY_LOCAL} -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
     fi
@@ -117,7 +117,7 @@ registry(){
     fi
 }
 
-registries(){
+inject_configuration(){
    cat > "${REGISTRY_CONFIG_PATH}" <<EOF
 mirrors:
   "registry.localhost:5000":

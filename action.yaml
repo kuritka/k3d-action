@@ -19,7 +19,7 @@ inputs:
     description: "(Optional) Cluster subnet CIDR. Default value 172.16.0.0/24 in case k3d-network is not set."
     required: false
   k3d-registry:
-    description: "(Optional) Docker registry accessible from the cluster."
+    description: "(Optional) Autogenerate docker registry accessible from the cluster."
     required: false
     default: "false"
 outputs:
