@@ -9,10 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./
+        id: single-cluster
         name: "Create single k3d Cluster"
         with:
-          id: test-cluster-1
-          k3d-name: "test-cluster-1"
+          k3d-name: "single cluster"
           k3d-args: >-
             -p "80:80@agent[0]"
             -p "443:443@agent[0]"
@@ -34,6 +34,5 @@ jobs:
         run: docker network inspect k3d-action-bridge-network
       - name: Output
         run: |
-          echo ${{ steps.test-cluster-1.outputs.k3d-network }}
-          echo ${{ steps.test-cluster-1.outputs.k3d-cidr }}
-          echo ${{ steps.CreateSingleK3dCluster.outputs.k3d-cidr }}
+          echo ${{ steps.single-cluster.outputs.k3d-network }}
+          echo ${{ steps.single-cluster.outputs.k3d-cidr }}
