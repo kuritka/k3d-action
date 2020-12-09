@@ -1,16 +1,16 @@
-name: Multi cluster; two pairs of clusters on two isolated networks
+name: Multi cluster; two pairs of clusters on two isolated networks with registry
 
 on:
   [workflow_dispatch, push]
 jobs:
   k3d-multicluster-demo:
-    name: Two pairs of clusters on two isolated networks
+    name: Two pairs of clusters on two isolated networks with registry
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: ./
         id: test-cluster-1-a
-        name: "Create 1st k3d Cluster in 172.20.0.0/24"
+        name: "Create 1st k3d Cluster in 172.20.0.0/24 with Registry"
         with:
           k3d-name: "test-cluster-1-a"
           k3d-network: "nw01"
@@ -23,7 +23,7 @@ jobs:
 
       - uses: ./
         id: test-cluster-1-b
-        name: "Create 2nd k3d Cluster in 172.20.0.0/24"
+        name: "Create 2nd k3d Cluster in 172.20.0.0/24 with Registry"
         with:
           k3d-name: "test-cluster-2-a"
           k3d-network: "nw01"
@@ -35,7 +35,7 @@ jobs:
 
       - uses: ./
         id: test-cluster-2-a
-        name: "Create 1st k3d Cluster in 172.20.1.0/24"
+        name: "Create 1st k3d Cluster in 172.20.1.0/24 with Registry"
         with:
           k3d-name: "test-cluster-1-b"
           k3d-network: "nw02"
@@ -48,7 +48,7 @@ jobs:
 
       - uses: ./
         id: test-cluster-2-b
-        name: "Create 2nd k3d Cluster in 172.20.1.0/24"
+        name: "Create 2nd k3d Cluster in 172.20.1.0/24 with Registry"
         with:
           k3d-name: "test-cluster-2-b"
           k3d-network: "nw02"

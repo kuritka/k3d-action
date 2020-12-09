@@ -1,15 +1,15 @@
-name: Multi cluster; two clusters on default network
+name: Multi cluster; two clusters on default network with registry
 
 on:
   [workflow_dispatch, push]
 jobs:
   k3d-multicluster-demo:
-    name: Two clusters on default network
+    name: Two clusters on default network with registry
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: ./
-        name: "Create 1st k3d Cluster"
+        name: "Create 1st k3d Cluster with Registry"
         with:
           k3d-name: "test-cluster-1"
           k3d-registry: true
@@ -18,7 +18,7 @@ jobs:
             --no-lb
             --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
       - uses: ./
-        name: "Create 2nd k3d Cluster"
+        name: "Create 2nd k3d Cluster with Registry"
         with:
           k3d-name: "test-cluster-2"
           k3d-registry: true
