@@ -33,5 +33,6 @@ jobs:
         run: docker network inspect k3d-action-bridge-network
       - name: Output
         run: |
-          echo ${{ steps.test-cluster-1.outputs.k3d-network }}
-          echo ${{ steps.test-cluster-1.outputs.k3d-cidr }}
+          echo ${{ steps }}
+          echo ${{ steps."Create single k3d Cluster".outputs.k3d-network }}
+          echo ${{ steps."Create single k3d Cluster".outputs.k3d-cidr }}
