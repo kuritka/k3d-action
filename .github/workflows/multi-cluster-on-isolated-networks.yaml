@@ -38,8 +38,8 @@ jobs:
 
       - name: Cluster info
         run: |
-          echo test-cluster-1: ${{ steps.test-cluster-1.outputs.k3d-network }} ${{ steps.test-cluster-1.outputs.k3d-subnet }}
-          echo test-cluster-2: ${{ steps.test-cluster-2.outputs.k3d-network }} ${{ steps.test-cluster-2.outputs.k3d-subnet }}
+          echo test-cluster-1: ${{ steps.test-cluster-1.outputs.k3d-network }} ${{ steps.test-cluster-1.outputs.k3d-subnet }} ${{ steps.test-cluster-1.outputs.k3d-registry-config-path }}
+          echo test-cluster-2: ${{ steps.test-cluster-2.outputs.k3d-network }} ${{ steps.test-cluster-2.outputs.k3d-subnet }} ${{ steps.test-cluster-2.outputs.k3d-registry-config-path }}
           echo
           kubectl cluster-info --context k3d-test-cluster-1 && kubectl cluster-info --context k3d-test-cluster-2
       - name: Nodes

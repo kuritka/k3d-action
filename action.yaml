@@ -22,6 +22,9 @@ inputs:
     description: "(Optional) Autogenerate docker registry accessible from the cluster."
     required: false
     default: "false"
+  k3d-registry-config-path:
+    description: "(Optional) Path to custom registry configuration file. Variable requires K3D_REGISTRY to be true."
+    required: false
 outputs:
   k3d-network:
     description: "Detected k3d version"
@@ -29,6 +32,9 @@ outputs:
   k3d-subnet:
     description: "Detected k3d network subnet"
     value: ${{ steps.main.outputs.k3d-subnet }}
+  k3d-registry-config-path:
+    description: "Detected k3d registry config path"
+    value: ${{ steps.main.outputs.k3d-registry-config-path }}
 runs:
   using: composite
   steps:
@@ -41,3 +47,4 @@ runs:
         K3D_NETWORK: ${{ inputs.k3d-network }}
         K3D_SUBNET: ${{ inputs.k3d-subnet }}
         K3D_REGISTRY: ${{ inputs.k3d-registry }}
+        K3D_REGISTRY_CONFIG_PATH: ${{ inputs.k3d-registry-config-path }}

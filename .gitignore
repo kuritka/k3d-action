@@ -6,8 +6,8 @@
 !LICENSE
 !README.md
 !.gitignore
-!action.yaml
 !run.sh
+!*.yaml
 
 # ...even if they are in subdirectories
 !*/

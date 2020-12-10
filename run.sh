@@ -14,7 +14,7 @@ DEFAULT_NETWORK=k3d-action-bridge-network
 DEFAULT_SUBNET=172.16.0.0/24
 NOT_FOUND=k3d-not-found-network
 REGISTRY_LOCAL=registry.local
-REGISTRY_CONFIG_PATH="$(pwd)/registries.yaml"
+DEFAULT_REGISTRY_CONFIG_PATH="$(pwd)/registries.yaml"
 
 #######################
 #
@@ -30,14 +30,24 @@ usage(){
 
   Environment variables:
       deploy
-                        K3D_NAME (Required) k3d cluster name
-                        K3D_ARGS (Optional) k3d arguments
+                        K3D_NAME (Required) k3d cluster name.
+
+                        K3D_ARGS (Optional) k3d arguments.
+
                         K3D_NETWORK (Optional) If not set than default k3d-action-bridge-network is created
                                                and all clusters share that network.
+
                         K3D_SUBNET (Optional) If not set than default 172.16.0.0/24 is used. Variable requires
-                                              K3D_NETWORK to be set
-                        K3D_REGISTRY (Optional) If true, provides local registry registry.localhost:5000 without
-                                              TLS and authentication
+                                              K3D_NETWORK to be set.
+
+                        K3D_REGISTRY (Optional) If not set than default false. If true provides local docker registry
+                                              registry.localhost:5000 without TLS and authentication.
+
+                        K3D_REGISTRY_CONFIG_PATH (Optional) Path to custom registry configuration file.
+                                              see: https://rancher.com/docs/k3s/latest/en/installation/private-registry/#mirrors
+                                              Variable requires K3D_REGISTRY to be true.
+
+
 EOF
 }
 
@@ -53,9 +63,11 @@ deploy(){
     local arguments=${K3D_ARGS:-}
     local network=${K3D_NETWORK:-$DEFAULT_NETWORK}
     local subnet=${K3D_SUBNET:-$DEFAULT_SUBNET}
-    local registry=${K3D_REGISTRY:-}
+    local registry=${K3D_REGISTRY:-$NOT_FOUND}
+    local registry_path=${$(pwd)K3D_REGISTRY_CONFIG_PATH:-DEFAULT_REGISTRY_CONFIG_PATH}
     local registryArg
 
+    echo registry_path
     existing_network=$(docker network list | awk '   {print $2 }' | grep -w "^$network$" || echo $NOT_FOUND)
 
     if [[ ($network == "$DEFAULT_NETWORK") && ($subnet != "$DEFAULT_SUBNET") ]]
@@ -86,13 +98,14 @@ deploy(){
     if [[ "$registry" == "true" ]]
     then
       echo -e "${YELLOW}attaching registry to ${CYAN}$network ${NC}"
-      registry "$network"
-      registryArg="--volume \"${REGISTRY_CONFIG_PATH}:/etc/rancher/k3s/registries.yaml\""
+      registry "$network" "$registry_path"
+      registryArg="--volume \"$registry_path:/etc/rancher/k3s/registries.yaml\""
     fi
 
     # Setup GitHub Actions outputs
     echo "::set-output name=k3d-network::$network"
     echo "::set-output name=k3d-subnet::$subnet"
+    echo "::set-output name=k3d-registry-config-path::$registry_path"
 
     echo -e "${YELLOW}Downloading ${CYAN}k3d ${NC}see: ${K3D_URL}"
     curl --silent --fail ${K3D_URL} | bash
@@ -103,10 +116,15 @@ deploy(){
 
 registry(){
     local network=$1
+    local registry_path=$2
     # create registry if not exists
     if [ ! "$(docker ps -q -f name=${REGISTRY_LOCAL})" ];
     then
-      inject_configuration
+      # no custom path is provided
+      if [ "$registry_path" == "${DEFAULT_REGISTRY_CONFIG_PATH}" ]
+      then
+        inject_configuration
+      fi
       docker volume create local_registry
       docker container run -d --name ${REGISTRY_LOCAL} -v local_registry:/var/lib/registry --restart always -p 5000:5000 registry:2
     fi
@@ -120,7 +138,7 @@ registry(){
 
 # see: https://rancher.com/docs/k3s/latest/en/installation/private-registry/#mirrors
 inject_configuration(){
-   cat > "${REGISTRY_CONFIG_PATH}" <<EOF
+   cat > "${DEFAULT_REGISTRY_CONFIG_PATH}" <<EOF
 mirrors:
   "registry.localhost:5000":
     endpoint:
@@ -164,4 +182,3 @@ case "$1" in
   exit 0
   ;;
 esac
-

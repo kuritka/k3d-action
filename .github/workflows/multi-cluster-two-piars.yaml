@@ -57,10 +57,10 @@ jobs:
       - name: Cluster info
         run: |
           echo
-          echo test-cluster-1-a: ${{ steps.test-cluster-1-a.outputs.k3d-network }} ${{ steps.test-cluster-1-a.outputs.k3d-subnet }}
-          echo test-cluster-1-b: ${{ steps.test-cluster-1-b.outputs.k3d-network }} ${{ steps.test-cluster-1-b.outputs.k3d-subnet }}
-          echo test-cluster-2-a: ${{ steps.test-cluster-2-a.outputs.k3d-network }} ${{ steps.test-cluster-2-a.outputs.k3d-subnet }}
-          echo test-cluster-2-b: ${{ steps.test-cluster-2-b.outputs.k3d-network }} ${{ steps.test-cluster-2-b.outputs.k3d-subnet }}
+          echo test-cluster-1-a: ${{ steps.test-cluster-1-a.outputs.k3d-network }} ${{ steps.test-cluster-1-a.outputs.k3d-subnet }} ${{ steps.test-cluster-1-a.outputs.k3d-registry-config-path }}
+          echo test-cluster-1-b: ${{ steps.test-cluster-1-b.outputs.k3d-network }} ${{ steps.test-cluster-1-b.outputs.k3d-subnet }} ${{ steps.test-cluster-1-b.outputs.k3d-registry-config-path }}
+          echo test-cluster-2-a: ${{ steps.test-cluster-2-a.outputs.k3d-network }} ${{ steps.test-cluster-2-a.outputs.k3d-subnet }} ${{ steps.test-cluster-2-a.outputs.k3d-registry-config-path }}
+          echo test-cluster-2-b: ${{ steps.test-cluster-2-b.outputs.k3d-network }} ${{ steps.test-cluster-2-b.outputs.k3d-subnet }} ${{ steps.test-cluster-2-b.outputs.k3d-registry-config-path }}
           echo
           kubectl cluster-info --context k3d-test-cluster-1-a
           kubectl cluster-info --context k3d-test-cluster-2-a

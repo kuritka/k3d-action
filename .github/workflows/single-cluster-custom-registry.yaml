@@ -14,6 +14,7 @@ jobs:
         with:
           k3d-name: "test-cluster-1"
           k3d-registry: true
+          k3d-registry-config-path: "/test/registries.yaml"
           k3d-args: >-
             --agents 1
             --no-lb

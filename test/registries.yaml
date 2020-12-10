@@ -1,0 +1,4 @@
+mirrors:
+  "test.localregistry:5001":
+    endpoint:
+      - "http://test.localregistry:5001"
