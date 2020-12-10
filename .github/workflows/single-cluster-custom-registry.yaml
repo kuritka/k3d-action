@@ -1,16 +1,16 @@
-name: Single cluster on default network with registry
+name: Single cluster on default network with CUSTOM registry
 
 on:
   [workflow_dispatch, push]
 jobs:
   k3d-single-cluster-demo:
-    name: Single cluster on default network with registry
+    name: Single cluster on default network with CUSTOM registry
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: ./
         id: single-cluster
-        name: "Create single k3d Cluster with Registry"
+        name: "Create single k3d Cluster with CUSTOM Registry"
         with:
           k3d-name: "test-cluster-1"
           k3d-registry: true
