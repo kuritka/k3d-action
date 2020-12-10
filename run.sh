@@ -91,7 +91,7 @@ deploy(){
       echo -e "${YELLOW}attaching registry to ${CYAN}$network ${NC}"
       registry "$network"
       registryArg="--volume \"${REGISTRY_CONFIG_PATH}:/etc/rancher/k3s/registries.yaml\""
-      echo "${CYAN} installed configuration ${YELLOW}"
+      echo -e "${CYAN} injected configuration ${YELLOW}"
       cat "${REGISTRY_CONFIG_PATH}"
       echo "${NC}"
     fi
