@@ -32,9 +32,6 @@ outputs:
   k3d-subnet:
     description: "Detected k3d network subnet"
     value: ${{ steps.main.outputs.k3d-subnet }}
-  k3d-registry-config-path:
-    description: "Detected k3d registry config path"
-    value: ${{ steps.main.outputs.k3d-registry-config-path }}
 runs:
   using: composite
   steps:
