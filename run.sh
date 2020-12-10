@@ -91,8 +91,8 @@ deploy(){
       echo -e "${YELLOW}attaching registry to ${CYAN}$network ${NC}"
       registry "$network"
       registryArg="--volume \"${REGISTRY_CONFIG_PATH}:/etc/rancher/k3s/registries.yaml\""
-      echo -e "${CYAN} injected configuration ${YELLOW}\n$(cat "${REGISTRY_CONFIG_PATH}")\n${NC}"
-
+      echo -e "${CYAN}Injected registry configuration:${NC}"
+      cat "${REGISTRY_CONFIG_PATH}"
     fi
 
     # Setup GitHub Actions outputs
