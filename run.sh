@@ -127,7 +127,7 @@ registry(){
 # depending on K3D_REGISTRY_CONFIG_PATH inject given or predefined configuration
 # see: https://rancher.com/docs/k3s/latest/en/installation/private-registry/#mirrors
 inject_configuration(){
-  local registry=${K3D_REGISTRY_CONFIG_PATH:-REGISTRY_CONFIG_PATH}
+  local registry=${K3D_REGISTRY_CONFIG_PATH:-$REGISTRY_CONFIG_PATH}
   if [[ "$registry" == "$REGISTRY_CONFIG_PATH" ]]
   then
    cat > "${REGISTRY_CONFIG_PATH}" <<EOF
